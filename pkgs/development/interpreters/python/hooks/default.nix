@@ -97,7 +97,13 @@ in {
   pytestCheckHook = callPackage ({ makePythonHook, pytest }:
     makePythonHook {
       name = "pytest-check-hook";
-      propagatedBuildInputs = [ pytest ];
+      # propagatedBuildInputs = [ pytest ];
+      # Add a dependency on "coverage" to "propagatedBuildInputs" so that we can invoke
+      # the tests under coverage.py.
+      # XXX: "coverage" itself does not use "pytestCheckHook". If it did, would this
+      # lead to a dependency cycle error? If so, it could be avoided by removing
+      # "pytestCheckHook" from coverage's default.nix.
+      propagatedBuildInputs = [ pytest coverage ];
       substitutions = {
         inherit pythonCheckInterpreter;
       };
